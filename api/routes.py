@@ -1,8 +1,8 @@
-from flask_resful import Api
+from flask_restful import Api
 
-from api.foods import FoodsApi
+from api.food import FoodsApi
 
 
 def create_route(api: Api):
-
-    api.add_resource(FoodsApi,'/foods')
+    print("create_route")
+    api.add_resource(FoodsApi, '/foods') 

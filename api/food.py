@@ -1,5 +1,5 @@
 from flask import request,jsonify,Response,current_app
-from flask_resful import Resources
+from flask_restful import Resource
 from flask_jwt_extended import jwt_required
 
 

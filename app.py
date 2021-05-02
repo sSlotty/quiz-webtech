@@ -1,15 +1,12 @@
 from flask import Flask
-import sqlalchemy
-from flask_core import CORS
-from falsk_jwt_exceptions.jwt_manager import JWTManager
-from flask_resful import Api
+from flask_cors import CORS
+from flask_jwt_extended.jwt_manager import JWTManager
+from flask_restful import Api
 
 from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy()
-#init app
-app = Flask(__name__)
-
+from api.routes import create_route
+ 
 config = {
     'JSON_SORT_KEYS': False,
     'SQLALCHEMY_DATABASE_URI': 'sqlite:///food_db.db',
@@ -19,6 +16,10 @@ config = {
     'JWT_REFRESH_TOKEN_EXPIRES': 604800
 }
 
+#init app
+app = Flask(__name__)
+db = SQLAlchemy()
+
 CORS(app, origins="*", allow_headers=[
     "Content-Type", "Authorization", "Access-Control-Allow-Credentials"
 ], supports_credentials=True)
@@ -26,6 +27,8 @@ CORS(app, origins="*", allow_headers=[
 
 app.config.update(config)
 
+api = Api(app)
+create_route(api=api)
 
 db.init_app(app)
 
