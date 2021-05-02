@@ -7,3 +7,11 @@ from flask_jwt_extended import (
     jwt_required,
     get_jwt_identity
 )
+
+import json
+
+
+class SignUpAPI(Resource):
+    def post(self)-> Response:
+        body = request.get_json()
+        
