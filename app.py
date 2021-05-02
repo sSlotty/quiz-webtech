@@ -9,8 +9,6 @@ from api.routes import create_route
  
 config = {
     'JSON_SORT_KEYS': False,
-    'SQLALCHEMY_DATABASE_URI': 'sqlite:///food_db.db',
-    'SQLALCHEMY_TRACK_MODIFICATIONS': False,
     'JWT_SECRET_KEY': '&F)J@NcRfUjXn2r5u7x!A%D*G-KaPdSg',
     'JWT_ACCESS_TOKEN_EXPIRES': 300,
     'JWT_REFRESH_TOKEN_EXPIRES': 604800
@@ -18,7 +16,7 @@ config = {
 
 #init app
 app = Flask(__name__)
-db = SQLAlchemy()
+
 
 CORS(app, origins="*", allow_headers=[
     "Content-Type", "Authorization", "Access-Control-Allow-Credentials"
@@ -30,7 +28,6 @@ app.config.update(config)
 api = Api(app)
 create_route(api=api)
 
-db.init_app(app)
 
 # init JWT
 jwt = JWTManager(app=app)
