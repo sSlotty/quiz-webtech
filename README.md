@@ -40,7 +40,7 @@ python app.py
   localhost:5000/bmr [ GET BMR param : name , age , weight , height, gender ]
   ```
   
-### Author 🧑🏻
+### Author 👱🏻‍♂️
 ```
 Thanathip Chanasri
 Computer Science Faculy of Science Srinakharinwirot University
