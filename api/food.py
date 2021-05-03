@@ -7,7 +7,6 @@ import json
 class FoodsApi(Resource):
 
     def get(self)-> Response:
-       
         if 'name' in request.args:
             name = request.args.get('name')
             data = readJsonFile()
@@ -28,7 +27,7 @@ class FoodsApi(Resource):
             obj = json.loads(data)
             response = list()
             for i in obj:
-                if i['Kilocalories'] <= int(calories):
+                if int(calories) >=i['Kilocalories']:
                     x = {
                         'name':i['Name'],
                         'Kilocalories': i['Kilocalories']
@@ -85,10 +84,12 @@ class FoodsApi(Resource):
         else:
             return Response(status=204)
     
+
+class FoodApi(Resource):
+
     @jwt_required()
-    def delete(self)->Response:
-        body = request.get_json()
-        key = body['name']
+    def delete(self,name: str)->Response:
+        key = name
         read = readJsonFile()
         obj = json.loads(read)
         data = list()
