@@ -1,12 +1,13 @@
 ## quiz-webtech 💻
 ### install
+การติดตั้ง จำเป็นที่จะต้องสร้าง virtualenv ก่อน
 #### clone project
 ```
 git clone https://github.com/sSlotty/quiz-webtech
 ```
 #### install lib
 ```
-pip install -r requiredment.txt
+pip install -r requirements.txt
 ```
 #### start project
 ```
