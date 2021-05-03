@@ -186,6 +186,45 @@ paths:
                   message:
                     type: string
                     example: not found
+  /bmr:
+    get:
+      tags:
+        - BMR
+      summary: BMR
+      parameters:
+      - name: weight
+        in: query
+        description: weight
+        schema:
+          type: number
+          required: true
+      - name: height
+        in: query
+        description: height
+        schema:
+          type: number
+          required: true
+      - name: age
+        in: query
+        description: age
+        schema:
+          type: integer
+          required: true
+      - name: gender
+        in: query
+        description: gender
+        schema:
+          type: string
+          required: true
+          enum: [m,g]
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/bmrSchemas"
+
 components:
   securitySchemes:
     bearerAuth:
@@ -307,11 +346,6 @@ components:
           type: number
     bmrSchemas:
       type: object
-      required:
-        - gender
-        - height
-        - weight
-        - age
       properties:
         bmr:
           type: number

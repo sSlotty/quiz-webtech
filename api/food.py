@@ -126,7 +126,8 @@ class BmrAPI(Resource):
             Response(status_code=204)
         
         bmr = round(bmr)
-        res = jsonify(bmr)
+        data = {'bmr':bmr}
+        res = jsonify(data)
         res.status_code = 200
         return res
 
