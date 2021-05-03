@@ -2,7 +2,7 @@ openapi: "3.0.0"
 info:
   description: API Reference
   version: 1.0.0
-  title: Python Flask RESTful API | Food API quiz `ID 62102010027`
+  title: Python Flask RESTful API | Food API quiz ID 62102010027
 servers:
   - url: http://localhost:5000
 paths:
@@ -109,7 +109,7 @@ paths:
     put:
       tags:
         - Food API
-      summary: Food API 
+      summary: Food API Edit food
       security:
         - bearerAuth: []
       requestBody:
@@ -149,7 +149,7 @@ paths:
     delete:
       tags:
         - Food API
-      summary: Food API Delete
+      summary: Food API Delete food
       security:
         - bearerAuth: []
       parameters:
