@@ -38,11 +38,12 @@ class FoodsApi(Resource):
             res.status_code = 200
             return res
         else:
-            Response(status=204)
+            return Response(status=204)
 
     @jwt_required()
     def post(self)->Response:
         body = request.get_json()
+        print(body)
         read = readJsonFile()
         obj = json.loads(read)
         data = list()

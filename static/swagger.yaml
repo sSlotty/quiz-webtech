@@ -2,201 +2,73 @@ openapi: "3.0.0"
 info:
   description: API Reference
   version: 1.0.0
-  title: Python Flask RESTful API
+  title: Python Flask RESTful API | Food API quiz 
 servers:
   - url: http://localhost:5000
 paths:
-  /users:
-    get:
-      tags:
-        - User
-      summary: Find users
-      responses:
-        "200":
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/User"
-        "204":
-          description: Users not found
-        "400":
-          description: Invalid parameters
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: bad request
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: internal server error
-  /users/{id}:
-    get:
-      tags:
-        - User
-      summary: Find user by ID
-      parameters:
-        - name: id
-          in: path
-          description: User id
-          schema:
-            type: string
-          required: true
-      responses:
-        "200":
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        "404":
-          description: Deed not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: not found
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: internal server error
-  /foods/{name}:
-    get:
-      tags:
-        - Foods
-      summary: Find food by name
-      parameters:
-        - name: name
-          in: path
-          description: string food name
-          schema:
-            type: string
-          required: true
-      responses:
-        "200":
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/foodSchemas"
-        "400":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: not found
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: internal server error
+  /authentication/token:
     post:
       tags:
-        - Deed
-      summary: Add a new deed
+        - Authentication
+      summary: Authentication
       requestBody:
+        required: true
         content:
-          multipart/form-data:
+          application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                customer_id:
-                  type: integer
-                deed_name:
+                username:
                   type: string
-                address:
+                password:
                   type: string
-                latitude:
-                  type: number
-                longitude:
-                  type: number
-                fileName:
-                  type: string
-                  format: binary
+              required:
+                - username
+                - password
       responses:
-        '201':
-          description: Created
+        '200':
+          description: Successful operation
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: success
+                $ref: "#/components/schemas/Token"
         '400':
           description: Invalid parameters
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: bad request
-        '500':
-          description: Internal server error
+                $ref: "#/components/schemas/OAuthError"
+        '204':
+          description: Username or Password not found
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: internal server error
-
-  
-  /foods/{calories}:
+                $ref: "#/components/schemas/OAuthError"
+  /foods:
     get:
       tags:
-        - Foods
-      summary: Find food whice lower than this Calories
+        - Food API
+      summary: Food API
       parameters:
-        - name: calories
-          in: path
-          description: Int Food Calories
-          schema:
-            type: string
-          required: true
+      - name: name
+        in: query
+        description: Food name
+        schema:
+          type: string
+      - name: calories
+        in: query
+        description: calories of food
+        schema:
+          type: number
       responses:
-        "200":
-          description: Successful operation
+        '200':
+          description: Successful operation search name
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/caloriesSchemas"
-        "400":
-          description: Internal server error
+                $ref: "#/components/schemas/foodSchemas"
+        '204':
+          description: Food name not found
           content:
             application/json:
               schema:
@@ -205,56 +77,66 @@ paths:
                   message:
                     type: string
                     example: not found
-        "500":
-          description: Internal server error
+    post:
+      tags:
+        - Food API
+      summary: Food API create food
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/foodSchemas"
+      responses:
+        '200':
+          description: Successful create food
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/foodSchemas"
+        '401':
+          description: Unauthorize
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  message:
+                  msg:
                     type: string
-                    example: internal server error
-                    
-  /bmr/{gender}/{height}/{weight}/{age}:
-    get:
+                    example: Token has expired
+    put:
       tags:
-        - Foods
-      summary: Find food whice lower than this Calories
-      parameters:
-        - name: weight
-          in: path
-          description: Int weight
-          schema:
-            type: integer
-          required: true
-        - name: height
-          in: path
-          description: Int height
-          schema:
-            type: integer
-          required: true
-        - name: age
-          in: path
-          description: Int height
-          schema:
-            type: integer
-          required: true
-        - name: gender
-          in: path
-          description: Int height
-          schema:
-            type: string
-          required: true
+        - Food API
+      summary: Food API 
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/editFoodSchema"
       responses:
-        "200":
-          description: Successful operation
+        '200':
+          description: Successful create food
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/bmrSchemas"
-        "400":
-          description: Internal server error
+                $ref: "#/components/schemas/foodSchemas"
+        '401':
+          description: Unauthorize
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Token has expired
+        '204':
+          description: Food name not found
           content:
             application/json:
               schema:
@@ -263,8 +145,39 @@ paths:
                   message:
                     type: string
                     example: not found
-        "500":
-          description: Internal server error
+  /foods/delete/{name}:
+    delete:
+      tags:
+        - Food API
+      summary: Food API Delete
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: name
+          in: path
+          description: Food name
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful create food
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/foodSchemas"
+        '401':
+          description: Unauthorize
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Token has expired
+        '204':
+          description: Food name not found
           content:
             application/json:
               schema:
@@ -272,43 +185,45 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: internal server error
+                    example: not found
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
-    User:
+    Token:
       type: object
-      required:
-        - username
-        - firstName
-        - lastName
-        - email
       properties:
-        _id:
+        access_token:
+          type: string
+        token_type:
+          type: string
+        expires_in:
           type: integer
           format: int64
-        username:
+        refresh_token:
           type: string
-        firstName:
+    OAuthError:
+      type: object
+      properties:
+        error:
           type: string
-        lastName:
+        error_description:
           type: string
-        subjects:
-          type: string
-          
     foodSchemas:
       type: object
-      required:
-        - name
       properties:
-        name:
+        Name:
           type: string
-        Killocalories:
+        Kilocalories:
           type: number
-        Alpha-Carotene:
+        Alpha_Carotene:
           type: number
-        Beta-Carotene:
+        Beta_Carotene:
           type: number
-        Carbohtdrate:
+        Carbohydrate:
           type: number
         Cholesterol:
           type: number
@@ -324,30 +239,72 @@ components:
           type: number
         Selenium:
           type: number
+        Sugar_Total:
+          type: number
         Zinc:
           type: number
-        Vitamon-B12:
+        Vitamin_B12:
           type: number
-        Vitamin-B6:
+        Vitamin_B6:
           type: number
-        Vitamin-C:
+        Vitamin_C:
           type: number
-        Vitamin-E:
+        Vitamin_E:
           type: number
-        Vitamin-K:
+        Vitamin_K:
           type: number
-          
-          
+    editFoodSchema:
+      type: object
+      properties:
+        key:
+          type: string
+        Name:
+          type: string
+        Kilocalories:
+          type: number
+        Alpha_Carotene:
+          type: number
+        Beta_Carotene:
+          type: number
+        Carbohydrate:
+          type: number
+        Cholesterol:
+          type: number
+        Choline:
+          type: number
+        Fiber:
+          type: number
+        Lycopene:
+          type: number
+        Manganese:
+          type: number
+        Protein:
+          type: number
+        Selenium:
+          type: number
+        Sugar_Total:
+          type: number
+        Zinc:
+          type: number
+        Vitamin_B12:
+          type: number
+        Vitamin_B6:
+          type: number
+        Vitamin_C:
+          type: number
+        Vitamin_E:
+          type: number
+        Vitamin_K:
+          type: number
     caloriesSchemas:
       type: object
       required:
-        - name
+        - calories
       properties:
         name:
           type: string
-        Killocalories:
+        Kilocalories:
           type: number
-          
     bmrSchemas:
       type: object
       required:
@@ -357,5 +314,5 @@ components:
         - age
       properties:
         bmr:
-          type: integer
+          type: number
         
