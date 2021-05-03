@@ -123,7 +123,7 @@ class BmrAPI(Resource):
         elif gender.upper() == 'G':
             bmr = 655.1 + (9.6 * weight) + (1.8 * height) - (4.7 * age)
         else:
-            Response(status_code=204)
+            return Response(status_code=204)
         
         bmr = round(bmr)
         data = {'bmr':bmr}
