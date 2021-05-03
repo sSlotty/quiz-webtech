@@ -1,0 +1,113 @@
+openapi: '3.0.1'
+info:
+  title: API Title
+  version: '1.0'
+servers:
+  - url: http://localhost:5000
+paths:
+  /test:
+   get:
+    tags:
+     - test 
+    summary: get test 
+    parameters:
+    - name: name
+      in: query
+      description: Food name
+      schema:
+          type: string
+    responses:
+      '200':
+       description: test Response
+       content:
+        application/json:
+         schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: not found
+      '400':
+       description: error response
+       content:
+        application/json:
+         schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: 404 error 
+            error_code:
+              type: number
+              example: 404
+  /test/{name}:
+    get:
+     tags:
+      - paths
+     summary: get with path
+     parameters:
+      - name: name
+        in: path
+        description: Test path param
+        schema:
+          type: string
+        required: true
+     responses:
+      '200':
+        description: rest path responses
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: succefuly
+                error_code:
+                  type: number
+                  example: test
+    
+  /test/post:
+    post:
+      tags:
+       - pp
+      summary: test post requestBody
+      requestBody:
+        required: True
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: test success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/returnSchema'
+                
+
+components:
+  schemas:
+    returnSchema:
+      type: object
+      properties:
+        user_id:
+          type: string
+        name:
+          type: string
+    testSche:
+      type: object
+      properties:
+        food:
+          type: string
+        price:
+          type: number
